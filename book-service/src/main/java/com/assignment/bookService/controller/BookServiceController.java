@@ -50,8 +50,7 @@ public class BookServiceController {
 ////		return bookServiceRepository.
 //		return null;
 //	}
-	
-	// from gpt
+	 
 	
 	// 1. List all books with pagination and filtering
     @GetMapping
