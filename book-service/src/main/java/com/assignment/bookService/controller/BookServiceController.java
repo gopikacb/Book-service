@@ -3,6 +3,7 @@ package com.assignment.bookService.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.assignment.bookService.model.Book;
+import com.assignment.bookService.model.dto.BookStatusDTO;
 import com.assignment.bookService.repository.BookServiceRepository;
 import com.assignment.bookService.service.BookService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
-@RequestMapping("/library-manager/")
+@CrossOrigin(origins = "*")
+@RequestMapping("/api/")
 public class BookServiceController {
 
 	@Autowired
@@ -36,27 +38,6 @@ public class BookServiceController {
 	public List<Book> getUserDetails() {
 		return bookServiceRepository.findAll();
 	}
-
-//	@PostMapping("/books")
-//	public Book addBook(@RequestBody Book book) {
-//		return bookServiceRepository.save(book);
-//	}
-//	
-//	@PutMapping("/books/{_id}")
-//	public Book updateBook(@RequestBody Book book) {
-//		
-////		Book existing = bookServiceRepository.findById(book._id)
-////		        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-////		return bookServiceRepository.
-//		return null;
-//	}
-	 
-	
-	// 1. List all books with pagination and filtering
-    @GetMapping
-	public ResponseEntity<List<Book>> getAllBooks() {
-        return ResponseEntity.ok(bookService.getAllBooks());
-    }
 
     // 2. Get book by ID
     @GetMapping("/books/{bookId}")
@@ -90,17 +71,25 @@ public class BookServiceController {
     }
 
     // 7. Get availability status
-    @GetMapping("/books/{bookId}/status")
-    public ResponseEntity<String> getBookStatus(@PathVariable Long bookId) {
-        return ResponseEntity.ok(bookService.getBookStatus(bookId));
+    @GetMapping("/books/{bookId}/availability")
+    public ResponseEntity<Boolean> getBookStatus(@PathVariable Long bookId) {
+    	System.out.print("Status: "+bookService.getBookStatus(bookId));
+    	return ResponseEntity.ok(bookService.getBookStatus(bookId));
     }
 
-    // 8. Update book status
-    @PutMapping("/books/{bookId}/status")
-    public ResponseEntity<Void> updateBookStatus(@PathVariable Long bookId, @RequestBody String status) {
-        bookService.updateBookStatus(bookId, status);
-        return ResponseEntity.noContent().build();
-    }
+//     8. Update book status
+//    @PutMapping("/books/{bookId}/status")
+//    public ResponseEntity<Void> updateBookStatus(@PathVariable Long bookId, @RequestBody Boolean status) {
+//        bookService.updateBookStatus(bookId, status);
+//        return ResponseEntity.noContent().build();
+//    }
 	
-
+    
+    @PutMapping("/books/{bookId}/status")
+    public ResponseEntity<String> updateBookStatus(@PathVariable Long bookId,
+                                              @RequestBody BookStatusDTO bookStatus) {
+        
+        bookService.updateBookStatus(bookId, bookStatus.getStatus());
+        return ResponseEntity.ok("Updated Successfully");
+    }
 }

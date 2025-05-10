@@ -26,7 +26,7 @@ public class Book {
 
     private String description;
 
-    private String status;
+    private Integer noOfBooks;
 
     @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -41,7 +41,7 @@ public class Book {
     }
 
     public Book(String title, String isbn, String authors, String publisher,
-                Date publicationDate, String genre, String description, String status) {
+                Date publicationDate, String genre, String description, Integer noOfBooks) {
         this.title = title;
         this.isbn = isbn;
         this.authors = authors;
@@ -49,7 +49,7 @@ public class Book {
         this.publicationDate = publicationDate;
         this.genre = genre;
         this.description = description;
-        this.status = status;
+        this.noOfBooks = noOfBooks;
         this.createdAt = new Date(); // Set creation time on creation
         this.updatedAt = new Date(); // Set update time on creation
     }
@@ -72,7 +72,7 @@ public class Book {
         this.title = title;
     }
 
-    public String getIsbn() {
+    public String getIsbn() { 
         return isbn;
     }
 
@@ -120,12 +120,12 @@ public class Book {
         this.description = description;
     }
 
-    public String getStatus() {
-        return status;
+    public Integer getNoOfBooks() {
+        return noOfBooks;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setNoOfBooks(Integer noOfBooks) {
+        this.noOfBooks = noOfBooks;
     }
 
     public Date getCreatedAt() {

@@ -4,6 +4,7 @@ import com.assignment.bookService.model.Book;
 import com.assignment.bookService.repository.BookServiceRepository;
 import com.assignment.bookService.exception.ResourceNotFoundException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,7 @@ public class BookService {
         existing.setPublicationDate(updatedBook.getPublicationDate());
         existing.setGenre(updatedBook.getGenre());
         existing.setDescription(updatedBook.getDescription());
-        existing.setStatus(updatedBook.getStatus());
+        existing.setNoOfBooks(updatedBook.getNoOfBooks());
         existing.setUpdatedAt(new Date()); // Update timestamp
 
         // Save and return updated book
@@ -61,14 +62,21 @@ public class BookService {
     }
 
     // Get book status
-    public String getBookStatus(Long id) {
-        return getBookById(id).getStatus();
+    public Boolean getBookStatus(Long id) {
+    	if(getBookById(id).getNoOfBooks() > 0) {
+    		return true;
+    	}
+        return false;
     }
 
     // Update book status
     public void updateBookStatus(Long id, String status) {
         Book book = getBookById(id);
-        book.setStatus(status);
+        if(StringUtils.equals(status, "BORROWED")) {
+            book.setNoOfBooks(book.getNoOfBooks() - 1);
+        }else if(StringUtils.equals(status, "AVAILABLE")) {
+            book.setNoOfBooks(book.getNoOfBooks() + 1);
+        }
         book.setUpdatedAt(new Date()); // Update timestamp
         bookServiceRepository.save(book);
     }
