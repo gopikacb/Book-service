@@ -2,12 +2,20 @@ package com.assignment.bookService.service;
 
 import com.assignment.bookService.model.Book;
 import com.assignment.bookService.repository.BookServiceRepository;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+
 import com.assignment.bookService.exception.ResourceNotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +25,9 @@ public class BookService {
 
     @Autowired
     private BookServiceRepository bookServiceRepository;
+    
+    @Autowired
+    private EntityManager entityManager;
 
     // Get all books
     public List<Book> getAllBooks() {
@@ -81,9 +92,27 @@ public class BookService {
         bookServiceRepository.save(book);
     }
 
-    // Search books by various criteria (placeholder, can be implemented further)
     public List<Book> searchBooks(Map<String, String> params) {
-        // Implement search logic (e.g., using JPA Specification or custom query)
-        throw new UnsupportedOperationException("Search not yet implemented");
+    	CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Book> query = cb.createQuery(Book.class);
+        Root<Book> book = query.from(Book.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        params.forEach((key, value) -> {
+            if (key.equalsIgnoreCase("title")) {
+                predicates.add(cb.like(cb.lower(book.get("title")), "%" + value.toLowerCase() + "%"));
+            } else if (key.equalsIgnoreCase("author")) {
+                predicates.add(cb.like(cb.lower(book.get("author")), "%" + value.toLowerCase() + "%"));
+            } else if (key.equalsIgnoreCase("genre")) {
+                predicates.add(cb.equal(book.get("genre"), value));
+            } else if (key.equalsIgnoreCase("year")) {
+                predicates.add(cb.equal(book.get("year"), Integer.valueOf(value)));
+            }
+        });
+
+        query.select(book).where(cb.and(predicates.toArray(new Predicate[0])));
+
+        return entityManager.createQuery(query).getResultList();
     }
 }

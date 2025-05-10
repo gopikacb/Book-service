@@ -3,7 +3,6 @@ package com.assignment.bookService.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,8 @@ public class BookServiceController {
 	
 	@Autowired
 	private BookService bookService;
-
+	
+	// 1. Get all books
 	@GetMapping("/books")
 	public List<Book> getUserDetails() {
 		return bookServiceRepository.findAll();
@@ -77,14 +77,7 @@ public class BookServiceController {
     	return ResponseEntity.ok(bookService.getBookStatus(bookId));
     }
 
-//     8. Update book status
-//    @PutMapping("/books/{bookId}/status")
-//    public ResponseEntity<Void> updateBookStatus(@PathVariable Long bookId, @RequestBody Boolean status) {
-//        bookService.updateBookStatus(bookId, status);
-//        return ResponseEntity.noContent().build();
-//    }
-	
-    
+    // 8. update noOf books based on status
     @PutMapping("/books/{bookId}/status")
     public ResponseEntity<String> updateBookStatus(@PathVariable Long bookId,
                                               @RequestBody BookStatusDTO bookStatus) {

@@ -33,7 +33,7 @@ spec:
           periodSeconds: 10
         env:
         - name: POSTGRES_DB
-          value: booksdb
+          value: library_books
         - name: POSTGRES_USER
           value: postgres
         - name: POSTGRES_PASSWORD
