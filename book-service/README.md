@@ -12,6 +12,8 @@ This is a backend service for managing books, authors, and related entities. It 
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
+- [Docker Setup](#docker-setup)
+
 
 ## Tech Stack
 - **Backend**: Java, Spring Boot
@@ -83,4 +85,10 @@ The service will start on `http://localhost:8081`.
 - `GET /api/books/search`: Search for books by title, author, or genre.
 
 # Docker Setup
+
+ 1. **Build the Docker image**:
+
+```bash  
+    docker build -t book-service:latest .  
+```
 
